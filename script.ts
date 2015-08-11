@@ -1,29 +1,34 @@
 /// <reference path="typings/jquery/jquery.d.ts"/>
 
+// globals
+var MENU_PAGE_ID = "menu";
+var GAME_PAGE_ID = "game";
+var INFO_PAGE_ID = "info";
+var PAGE_CLASS = "page";
+
 $(function() {
     init();
 });
 
-function init() {
+function init(): void {
     initMenuButtons();
     initDomBoard();
-    
-    // TODO: remove after testing
-    initGame();
+    switchToPage(MENU_PAGE_ID);
 }
 
-function initGame() {
+function initGame(): void {
     var game = Game.getInstance();
     game.init();
 }
 
-function initMenuButtons() {
+function initMenuButtons(): void {
     $("#vsAiButton").click(function() {
         
     });
 	
     $("#vsPlayerButton").click(function() {
-        
+        switchToPage(GAME_PAGE_ID);
+        initGame();
     });
     
     $("#infoButton").click(function() {
@@ -31,7 +36,7 @@ function initMenuButtons() {
     });
 }
 
-function initDomBoard() {
+function initDomBoard(): void {
     for (var row = 0; row < ROWS; row++) {
         $("#board").append("<tr class='row' id='row" + row + "'></tr>");
         for (var col = 0; col < COLS; col++) {
@@ -44,4 +49,9 @@ function initDomBoard() {
         $("#game").append("<div class='piece blackPiece' id='black" + i + "'></div>");
         $("#game").append("<div class='piece whitePiece' id='white" + i + "'></div>");
     }
+}
+
+function switchToPage(pageId: string): void {
+    $("." + PAGE_CLASS).hide();
+    $("#" + pageId).show();
 }

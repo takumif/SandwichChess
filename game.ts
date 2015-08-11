@@ -7,6 +7,10 @@ var COLORS = [WHITE, BLACK];
 var ROWS = 8;
 var COLS = 8;
 var SELECTED = "selected";
+var DIRECTIONS = [{dr:  1, dc:  0},
+                  {dr:  0, dc:  1},
+                  {dr: -1, dc:  0},
+                  {dr:  0, dc: -1}];
 
 // Game class
 class Game {
@@ -15,6 +19,48 @@ class Game {
     pieces: { [keys: string]: Piece[] };
     board: Board;
     static instance: Game;
+
+    static getOppositeColor(color: string): string {
+        if (color === WHITE) {
+            return BLACK;
+        } else {
+            return WHITE;
+        }
+    }
+
+    static getInitialPieces(color: string): Piece[] {
+        var pieces = [];
+
+        for (var i = 0; i < COLS; i++) {
+            pieces.push(new Piece(i, color));
+        }
+
+        return pieces;
+    }
+
+    static getInstance(): Game {
+        if (Game.instance === undefined) {
+            Game.instance = new Game();
+        }
+    
+        return Game.instance;
+    }
+    
+    static withinBounds(row: number, col: number): boolean {
+        return (0 <= row && row < ROWS) && (0 <= col && col < COLS);
+    }
+    
+    static getAdjsWithinBounds(row: number, col: number): {row: number; col: number;}[] {
+        var allAdjs = DIRECTIONS.map((deltas) => {
+            return {row: row + deltas.dr, col: col + deltas.dc};
+        });
+        
+        var adjsWithinBounds = allAdjs.filter((coords) => {
+            return Game.withinBounds(coords.row, coords.col);
+        }); 
+        
+        return adjsWithinBounds;
+    }
 
     init(): void {
         this.board = new Board();
@@ -32,11 +78,7 @@ class Game {
     }
 
     removeSandwichedPieces(row: number, col: number): void {
-        var directions = [{dr:  1, dc:  0},
-                          {dr:  0, dc:  1},
-                          {dr: -1, dc:  0},
-                          {dr:  0, dc: -1}];
-        directions.forEach((deltas) => {
+        DIRECTIONS.forEach((deltas) => {
             var r = row + deltas.dr;
             var c = col + deltas.dc;
         
@@ -57,6 +99,7 @@ class Game {
         });
     }
 
+    // remove pieces exclusively (pieces at the argument coordinates won't be removed)
     removePiecesBetween(row1: number, col1: number, row2: number, col2: number): void {
         if (row1 === row2) {
             var minCol = Math.min(col1, col2) + 1;
@@ -78,8 +121,10 @@ class Game {
     }
 
     makeMove(row: number, col: number): void {
+        this.selectedPiece.moveTo(row, col);
+        this.removeSandwichedPieces(row, col);
+        this.removeUnmovablePieces(row, col);
         this.unselectPiece();
-        this.selectedPiece.moveTo(row, col, () => this.removeSandwichedPieces(row, col));
         this.changeTurns();
     }
 
@@ -140,7 +185,7 @@ class Game {
     }
 
     getPieceInCell(row: number, col: number): Piece {
-        return this.board.cells[row][col].piece;
+        return this.board.getPieceInCell(row, col);
     }
 
     removePiece(piece: Piece): void {
@@ -148,7 +193,7 @@ class Game {
         this.pieces[color].splice(this.pieces[color].indexOf(piece), 1);
         
         this.board.removePieceFromCell(piece.row, piece.col);
-        piece.hideDomElement();
+        piece.fadeDomElement();
     }
 
     placePiece(piece: Piece, row: number, col: number): void {
@@ -187,44 +232,48 @@ class Game {
             this.makeMoveIfLegitimate(row, col);
         }
     }
-
-    static getOppositeColor(color: string): string {
-        if (color === WHITE) {
-            return BLACK;
-        } else {
-            return WHITE;
-        }
-    }
-
-    static getInitialPieces(color: string): Piece[] {
-        var pieces = [];
-
-        for (var i = 0; i < COLS; i++) {
-            pieces.push(new Piece(i, color));
-        }
-
-        return pieces;
-    }
-
-    static initDomElementAt(domElement: JQuery, row: number, col: number): void {
-        // remove pre-existing bindings
-        domElement.off("click");
     
-        domElement.click(() => {
-            Game.getInstance().cellClicked(row, col);
+    private removeUnmovablePieces(row: number, col: number): void {
+        Game.getAdjsWithinBounds(row, col).forEach((adj) => {
+            var piece = this.getPieceInCell(adj.row, adj.col);
+            if (piece != null && piece.color == Game.getOppositeColor(this.turn)) {
+                var unmovable = this.getUnmovableAdjPieces(adj.row, adj.col, []);
+                this.removePieces(unmovable);
+            }
         });
     }
-
-    static getInstance(): Game {
-        if (Game.instance === undefined) {
-            Game.instance = new Game();
-        }
     
-        return Game.instance;
+    private getUnmovableAdjPieces(row: number, col: number,
+        visited: {row: number, col: number}[]): Piece[] {
+        if (this.getPieceInCell(row, col) === null) {
+            return [];
+        }
+        
+        visited.push({row: row, col: col});
+        var unmovable: Piece[] = [];
+        
+        Game.getAdjsWithinBounds(row, col).some((adj) => {
+            if (visited.indexOf(adj) !== -1) {
+                var unmovableForAdj = this.getUnmovableAdjPieces(adj.row, adj.col, []);
+                Array.prototype.push.apply(unmovable, unmovableForAdj);
+                
+                // if unmovableForAdj is empty then either this piece or the adj piece is movable, so short circuit
+                if (unmovableForAdj === []) {
+                    unmovable = [];
+                    return true;
+                }
+            }
+            
+            return false;
+        });
+        
+        return unmovable;
     }
     
-    static withinBounds(row: number, col: number): boolean {
-        return (0 <= row && row < ROWS) && (0 <= col && col < COLS);
+    private removePieces(pieces: Piece[]): void {
+        pieces.forEach((piece) => {
+            this.removePiece(piece);
+        });
     }
 }
 
@@ -235,6 +284,10 @@ class Board {
 
     constructor() {
         this.cells = Board.getCells();
+    }
+    
+    getPieceInCell(row: number, col: number): Piece {
+        return this.cells[row][col].piece;
     }
     
     removePieceFromCell(row: number, col: number): void {
@@ -285,12 +338,13 @@ class Piece {
         this.moveDomElementWithoutAnimationTo(this.row, this.col);
     }
     
-    moveTo(row: number, col: number, callback: Function): void {
+    moveTo(row: number, col: number): void {
         Game.getInstance().board.removePieceFromCell(this.row, this.col);
         
         this.row = row;
         this.col = col;
-        this.moveDomElementTo(row, col, callback);
+
+        this.moveDomElementTo(this.row, this.col);
         Game.getInstance().placePiece(this, this.row, this.col);
     }
     
@@ -299,13 +353,25 @@ class Piece {
         this.domElement.css(cell.domElement.position());
     }
 
-    moveDomElementTo(row: number, col: number, callback: Function): void {
+    moveDomElementTo(row: number, col: number): void {
         var cell = Game.getInstance().board.cells[row][col];
-        this.domElement.animate(cell.domElement.position(), 500, callback);
+        this.domElement.animate(cell.domElement.position(), 500);
     }
     
     hideDomElement(): void {
         this.domElement.hide();
+    }
+    
+    fadeDomElement(): void {
+        this.domElement.fadeOut();
+    }
+
+    select(): void {
+        this.domElement.addClass(SELECTED);
+    }
+    
+    unselect(): void {
+        this.domElement.removeClass(SELECTED);
     }
 
     static getCol(id: number): number {
@@ -318,14 +384,6 @@ class Piece {
         } else {
             return 0;
         }
-    }
-
-    select(): void {
-        this.domElement.addClass(SELECTED);
-    }
-    
-    unselect(): void {
-        this.domElement.removeClass(SELECTED);
     }
 }
 
@@ -346,6 +404,11 @@ class Cell {
     }
     
     initDomElement(): void {
-        Game.initDomElementAt(this.domElement, this.row, this.col);
+        // remove pre-existing bindings
+        this.domElement.off("click");
+    
+        this.domElement.click(() => {
+            Game.getInstance().cellClicked(this.row, this.col);
+        });
     }
 }
