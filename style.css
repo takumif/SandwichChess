@@ -1,0 +1,65 @@
+body {
+    width: 100%;
+    max-width: 640px;
+    margin: auto;
+}
+
+#board {
+    width: 90vw;
+    height: 90vw;
+    max-width: 600px;
+    max-height: 600px;
+    margin: auto;
+    border: 1px solid grey;
+}
+
+.cell {
+    width: 12.5%;
+    height: 12.5%;
+    padding: 0;
+}
+
+.evenCell {
+    background-color: #E8E1B7;
+}
+
+.oddCell {
+    background-color: #AB8C76;
+}
+
+.piece {
+    position: absolute;
+    height: 11vw;
+    width: 11vw;
+    max-height: 75px;
+    max-width: 75px;
+}
+
+.blackPiece {
+    background-color: red;
+}
+
+.whitePiece {
+    background-color: blue;
+}
+
+.selected {
+    background-color: yellow;
+}
+
+/* CSS for mobile devices */
+@media only screen and (max-device-width: 480px) {
+    body {
+        max-width: 100%;
+    }
+    
+    #board {
+        max-width: 90vw;
+        max-height: 90vw;
+    }
+
+    .piece {
+        height: 11vw;
+        width: 11vw;
+    }
+}
