@@ -237,28 +237,32 @@ class Game {
         Game.getAdjsWithinBounds(row, col).forEach((adj) => {
             var piece = this.getPieceInCell(adj.row, adj.col);
             if (piece != null && piece.color == Game.getOppositeColor(this.turn)) {
-                var unmovable = this.getUnmovableAdjPieces(adj.row, adj.col, []);
+                var empty2d = Array.apply(null, Array(8)).map(() => { return new Array(8) }); // emtpy 8x8 array
+                var unmovable = this.getUnmovableAdjPieces(adj.row, adj.col, empty2d);
                 this.removePieces(unmovable);
             }
         });
     }
     
     private getUnmovableAdjPieces(row: number, col: number,
-        visited: {row: number, col: number}[]): Piece[] {
+        visited: boolean[][]): Piece[] {
+        console.log("getUnmovableAdjPieces(" + row + ", " + col + ")")
         if (this.getPieceInCell(row, col) === null) {
             return [];
         }
         
-        visited.push({row: row, col: col});
-        var unmovable: Piece[] = [];
+        visited[row][col] = true;
+        var unmovable: Piece[] = [this.getPieceInCell(row, col)];
         
         Game.getAdjsWithinBounds(row, col).some((adj) => {
-            if (visited.indexOf(adj) !== -1) {
-                var unmovableForAdj = this.getUnmovableAdjPieces(adj.row, adj.col, []);
+            if (!visited[adj.row][adj.col] &&
+                (this.getPieceInCell(adj.row, adj.col) === null ||
+                    this.getPieceInCell(adj.row, adj.col).color === Game.getOppositeColor(this.turn))) {
+                var unmovableForAdj = this.getUnmovableAdjPieces(adj.row, adj.col, visited);
                 Array.prototype.push.apply(unmovable, unmovableForAdj);
                 
                 // if unmovableForAdj is empty then either this piece or the adj piece is movable, so short circuit
-                if (unmovableForAdj === []) {
+                if (unmovableForAdj.length === 0) {
                     unmovable = [];
                     return true;
                 }
