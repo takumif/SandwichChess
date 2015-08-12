@@ -233,6 +233,14 @@ class Game {
         }
     }
     
+    refreshPiecePositions(): void {
+        COLORS.forEach((color) => {
+            this.pieces[color].forEach((piece) => {
+                piece.moveDomElementWithoutAnimationTo(piece.row, piece.col);
+            });
+        });
+    }
+    
     private removeUnmovablePieces(row: number, col: number): void {
         Game.getAdjsWithinBounds(row, col).forEach((adj) => {
             var piece = this.getPieceInCell(adj.row, adj.col);

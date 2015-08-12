@@ -4,6 +4,61 @@ body {
     margin: auto;
 }
 
+/* ========== MENU PAGE ========== */
+
+#menu {
+    height: 100%;
+    margin: 0 5%;
+    
+    background-image: url(images/menu.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#buttonsPadding {
+    height: 45%;
+}
+
+.menuButton {
+    width: 50%;
+    padding-top: 11%;
+    margin: 3% auto;
+    cursor: pointer;
+    
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+
+#vsPlayerButton {
+    background-image: url(images/vsPlayerButton.png);
+}
+
+#vsPlayerButton:hover,
+#vsPlayerButton:active {
+    background-image: url(images/vsPlayerButton_highlight.png);
+}
+
+#vsComputerButton {
+    background-image: url(images/vsComputerButton.png);
+}
+
+#vsComputerButton:hover,
+#vsComputerButton:active {
+    background-image: url(images/vsComputerButton_highlight.png);
+}
+
+#settingsButton {
+    background-image: url(images/settingsButton.png);
+}
+
+#settingsButton:hover,
+#settingsButton:active {
+    background-image: url(images/settingsButton_highlight.png);
+}
+
+/* ========== GAME PAGE ========== */
+
 #board {
     width: 90vw;
     height: 90vw;
@@ -47,7 +102,7 @@ body {
     background-color: yellow;
 }
 
-/* CSS for mobile devices */
+/* ========== CSS for mobile devices ========== */
 @media only screen and (max-device-width: 480px) {
     body {
         max-width: 100%;

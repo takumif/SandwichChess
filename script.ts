@@ -22,15 +22,15 @@ function initGame(): void {
 }
 
 function initMenuButtons(): void {
-    $("#vsAiButton").click(function() {
-        
-    });
-	
     $("#vsPlayerButton").click(function() {
         switchToPage(GAME_PAGE_ID);
         initGame();
     });
     
+    $("#vsComputerButton").click(function() {
+        
+    });
+	
     $("#infoButton").click(function() {
         
     });
@@ -49,6 +49,10 @@ function initDomBoard(): void {
         $("#game").append("<div class='piece blackPiece' id='black" + i + "'></div>");
         $("#game").append("<div class='piece whitePiece' id='white" + i + "'></div>");
     }
+    
+    $(window).resize(() => {
+        Game.getInstance().refreshPiecePositions();
+    });
 }
 
 function switchToPage(pageId: string): void {
