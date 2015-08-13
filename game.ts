@@ -128,7 +128,9 @@ class Game {
             this.removeUnmovablePieces(row, col);
             this.updateScores();
             if (this.isGameOver()) {
-                this.gameOver();
+                window.setTimeout(() => {
+                    this.gameOver();
+                }, 500);
             } else {
                 this.changeTurns();
             }
@@ -261,7 +263,7 @@ class Game {
     }
     
     private gameOver(): void {
-        $("#winnerName").text(this.turn);
+        $("#winnerName").text(this.turn.toUpperCase());
         $("#gameOverScreen").show();
     }
     
