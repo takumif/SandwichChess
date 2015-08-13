@@ -68,6 +68,32 @@ body {
 }
 
 /* ========== GAME PAGE ========== */
+#scores {
+    width: 35%;
+    margin: auto;
+    padding: 20px;
+    overflow: auto;
+}
+
+.scorePanel {
+    float: left;
+    width: 50%;
+}
+
+.scorePieceImage {
+    width: 50%;
+}
+
+.scoreText {
+    vertical-align: super;
+}
+
+#turnIndicator {
+    width: 50%;
+    padding-top: 2%;
+    background-color: #AB8C76;
+    clear: both;
+}
 
 #board {
     width: 90vw;
@@ -118,7 +144,7 @@ body {
     background-image: url(images/back_button.png);
     width: 40%;
     padding-top: 9%;
-    margin: 5% auto;
+    margin: 5% auto 0 auto;
 }
 
 .backButton:hover,

@@ -68,13 +68,12 @@ class Game {
         this.pieces = {};
         this.pieces[WHITE] = Game.getInitialPieces(WHITE);
         this.pieces[BLACK] = Game.getInitialPieces(BLACK);
+        
+        this.updateScores();
 
         this.selectedPiece = null;
         this.turn = WHITE;
-    }
-
-    changeTurns(): void {
-        this.turn = Game.getOppositeColor(this.turn);
+        this.indicateTurn(WHITE);
     }
 
     removeSandwichedPieces(row: number, col: number): void {
@@ -122,10 +121,14 @@ class Game {
 
     makeMove(row: number, col: number): void {
         this.selectedPiece.moveTo(row, col);
-        this.removeSandwichedPieces(row, col);
-        this.removeUnmovablePieces(row, col);
         this.unselectPiece();
-        this.changeTurns();
+        
+        window.setTimeout(() => {
+            this.removeSandwichedPieces(row, col);
+            this.removeUnmovablePieces(row, col);
+            this.changeTurns();
+            this.updateScores();
+        }, 300);
     }
 
     hasNoPiecesInColBetweenRows(col: number, row1: number, row2: number): boolean {
@@ -241,6 +244,21 @@ class Game {
         });
     }
     
+    private indicateTurn(color: string): void {
+        var position = color == WHITE ? 0 : $('.scorePanel').width();
+        $("#turnIndicator").animate({"margin-left": position}, 500);
+    }
+    
+    private updateScores(): void {
+        $("#whiteScoreText").text(this.pieces[WHITE].length);
+        $("#blackScoreText").text(this.pieces[BLACK].length);
+    }
+
+    private changeTurns(): void {
+        this.turn = Game.getOppositeColor(this.turn);
+        this.indicateTurn(this.turn);
+    }
+    
     private removeUnmovablePieces(row: number, col: number): void {
         Game.getAdjsWithinBounds(row, col).forEach((adj) => {
             var piece = this.getPieceInCell(adj.row, adj.col);
@@ -341,8 +359,10 @@ class Piece {
     }
     
     initDomElement(): void {
-        // remove pre-existing bindings
+        // remove changes from previous game
         this.domElement.off("click");
+        this.domElement.show();
+        
         this.domElement.click(() => {
             Game.getInstance().cellClicked(this.row, this.col);
         });
