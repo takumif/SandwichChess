@@ -11,8 +11,9 @@ $(function() {
 });
 
 function init(): void {
+    preloadImages();
     initMenuButtons();
-    initDomBoard();
+    initGamePage();
     switchToPage(MENU_PAGE_ID);
 }
 
@@ -36,6 +37,11 @@ function initMenuButtons(): void {
     });
 }
 
+function initGamePage() {
+    initDomBoard();
+    initGamePageNavigation();
+}
+
 function initDomBoard(): void {
     for (var row = 0; row < ROWS; row++) {
         $("#board").append("<tr class='row' id='row" + row + "'></tr>");
@@ -46,8 +52,8 @@ function initDomBoard(): void {
     }
     
     for (var i = 0; i < COLS; i++) {
-        $("#game").append("<div class='piece blackPiece' id='black" + i + "'></div>");
-        $("#game").append("<div class='piece whitePiece' id='white" + i + "'></div>");
+        $("#board").append("<div class='piece blackPiece' id='black" + i + "'></div>");
+        $("#board").append("<div class='piece whitePiece' id='white" + i + "'></div>");
     }
     
     $(window).resize(() => {
@@ -55,7 +61,51 @@ function initDomBoard(): void {
     });
 }
 
+function initGamePageNavigation() {
+    $("#gameBackButton").click(() => {
+        $(".confirmationScreen").show();
+    });
+    
+    $("#gameConfirmationSmokeScreen, #gameNoButton").click(() => {
+        $("#gameConfirmationScreen").hide();
+    });
+    
+    $("#gameYesButton").click(() => {
+        $("#gameConfirmationScreen").hide();
+        switchToPage(MENU_PAGE_ID);
+    });
+}
+
 function switchToPage(pageId: string): void {
     $("." + PAGE_CLASS).hide();
     $("#" + pageId).show();
+}
+
+function preloadImages(): void {
+    var imageUrls = [
+        "images/menu.png",
+        "images/vsPlayerButton.png",
+        "images/vsPlayerButton_highlight.png",
+        "images/vsComputerButton.png",
+        "images/vsComputerButton_highlight.png",
+        "images/settingsButton.png",
+        "images/settingsButton_highlight.png",
+        "images/rook_white.png",
+        "images/rook_black.png",
+        "images/back_button.png",
+        "images/back_button_highlight.png",
+        "images/yes_button.png",
+        "images/yes_button_highlight.png",
+        "images/no_button.png",
+        "images/no_button_highlight.png",
+    ];
+    
+    imageUrls.forEach((imageUrl) => {
+        loadImage(imageUrl);
+    })
+}
+
+function loadImage(imageUrl: string): void {
+    var image = new Image();
+    image.src = imageUrl;
 }

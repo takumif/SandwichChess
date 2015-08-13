@@ -2,6 +2,20 @@ body {
     width: 100%;
     max-width: 640px;
     margin: auto;
+    font-size: 2em;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.button {
+    cursor: pointer;
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 /* ========== MENU PAGE ========== */
@@ -24,10 +38,6 @@ body {
     width: 50%;
     padding-top: 11%;
     margin: 3% auto;
-    cursor: pointer;
-    
-    background-size: 100%;
-    background-repeat: no-repeat;
 }
 
 #vsPlayerButton {
@@ -91,21 +101,98 @@ body {
 }
 
 .blackPiece {
-    background-color: red;
+    background-image: url(images/rook_black.png);
+    background-size: 100%;
 }
 
 .whitePiece {
-    background-color: blue;
+    background-image: url(images/rook_white.png);
+    background-size: 100%;
 }
 
 .selected {
-    background-color: yellow;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.backButton {
+    background-image: url(images/back_button.png);
+    width: 40%;
+    padding-top: 9%;
+    margin: 5% auto;
+}
+
+.backButton:hover,
+.backButton:active {
+    background-image: url(images/back_button_highlight.png);
+}
+
+.confirmationScreen {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    height: 100%;
+    width: 100%;
+}
+
+.confirmationSmokeScreen {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.confirmationDialog {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    
+    padding: 30px;
+    height: 400px;
+    width: 600px;
+    background-color: white;
+}
+
+.confirmationDialogText {
+    height: 50%;
+    width: 80%;
+    margin: 10% auto;
+    text-align: center;
+}
+
+.confirmationDialogButton {
+    height: 18%;
+    width: 40%;
+    margin: 0 5%;
+    
+    float: left;
+}
+
+.yesButton {
+    background-image: url(images/yes_button.png);
+}
+
+.noButton {
+    background-image: url(images/no_button.png);
+}
+
+.yesButton:hover,
+.yesButton:active {
+    background-image: url(images/yes_button_highlight.png);
+}
+
+.noButton:hover,
+.noButton:active {
+    background-image: url(images/no_button_highlight.png);
 }
 
 /* ========== CSS for mobile devices ========== */
 @media only screen and (max-device-width: 480px) {
     body {
         max-width: 100%;
+        font-size: 3em;
     }
     
     #board {
@@ -116,5 +203,12 @@ body {
     .piece {
         height: 11vw;
         width: 11vw;
+        max-height: 100%;
+        max-width: 100%;
+    }
+    
+    .confirmationDialog {
+        height: 60vw;
+        width: 90vw;
     }
 }

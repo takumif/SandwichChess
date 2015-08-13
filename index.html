@@ -10,13 +10,32 @@
         <div class="page" id="menu">
             <div id="buttonsPadding"></div>
             <div id="menuButtons">
-                <div class="menuButton" id="vsPlayerButton"></div>
-                <div class="menuButton" id="vsComputerButton"></div>
-                <div class="menuButton" id="settingsButton"></div>
+                <div class="button menuButton" id="vsPlayerButton"></div>
+                <div class="button menuButton" id="vsComputerButton"></div>
+                <div class="button menuButton" id="settingsButton"></div>
             </div>
         </div>
         <div class="page" id="game">
+            <div id="scores">
+                <div class="scorePanel" id="whiteScore">
+                    
+                </div>
+                <div class="scorePanel" id="blackScore">
+                    
+                </div>
+            </div>
             <table id="board"></table>
+            <div class="button backButton"id="gameBackButton"></div>
+            <div class="confirmationScreen" id="gameConfirmationScreen">
+                <div class="confirmationSmokeScreen" id="gameConfirmationSmokeScreen"></div>
+                <div class="confirmationDialog">
+                    <div class="confirmationDialogText">
+                        Do you want to quit the game and go back to the menu?
+                    </div>
+                    <div class="button confirmationDialogButton yesButton" id="gameYesButton"></div>
+                    <div class="button confirmationDialogButton noButton" id="gameNoButton"></div>
+                </div>
+            </div>
         </div>
         <div class="page" id="info"></div>
         <div id="ad"></div>
