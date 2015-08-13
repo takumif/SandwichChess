@@ -126,8 +126,12 @@ class Game {
         window.setTimeout(() => {
             this.removeSandwichedPieces(row, col);
             this.removeUnmovablePieces(row, col);
-            this.changeTurns();
             this.updateScores();
+            if (this.isGameOver()) {
+                this.gameOver();
+            } else {
+                this.changeTurns();
+            }
         }, 300);
     }
 
@@ -242,6 +246,23 @@ class Game {
                 piece.moveDomElementWithoutAnimationTo(piece.row, piece.col);
             });
         });
+    }
+    
+    private isGameOver(): boolean {
+        return (this.countPieces(this.turn) >= 
+                this.countPieces(Game.getOppositeColor(this.turn)) + 3) ||
+               ((this.countPieces(this.turn) > 
+                 this.countPieces(Game.getOppositeColor(this.turn))) &&
+                (this.countPieces(Game.getOppositeColor(this.turn)) <= 3));
+    }
+    
+    private countPieces(color: string): number {
+        return this.pieces[color].length;
+    }
+    
+    private gameOver(): void {
+        $("#winnerName").text(this.turn);
+        $("#gameOverScreen").show();
     }
     
     private indicateTurn(color: string): void {

@@ -63,7 +63,7 @@ function initDomBoard(): void {
 
 function initGamePageNavigation() {
     $("#gameBackButton").click(() => {
-        $(".confirmationScreen").show();
+        $("#gameConfirmationScreen").show();
     });
     
     $("#gameConfirmationSmokeScreen, #gameNoButton").click(() => {
@@ -72,6 +72,16 @@ function initGamePageNavigation() {
     
     $("#gameYesButton").click(() => {
         $("#gameConfirmationScreen").hide();
+        switchToPage(MENU_PAGE_ID);
+    });
+    
+    $("#gameOverYesButton").click(() => {
+        Game.getInstance().init();
+        $("#gameOverScreen").hide();
+    });
+    
+    $("#gameOverNoButton").click(() => {
+        $("#gameOverScreen").hide();
         switchToPage(MENU_PAGE_ID);
     });
 }
