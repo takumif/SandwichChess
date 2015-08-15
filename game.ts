@@ -1,18 +1,11 @@
+// Game.ts by Takumi Fujimoto
+
 /// <reference path="typings/jquery/jquery.d.ts"/>
+/// <reference path="Board.ts" />
+/// <reference path="Cell.ts" />
+/// <reference path="SandwichChessAI.ts" />
+/// <reference path="SandwichChessConstants.ts" />
 
-// Globals
-var WHITE = "white";
-var BLACK = "black";
-var COLORS = [WHITE, BLACK];
-var ROWS = 8;
-var COLS = 8;
-var SELECTED = "selected";
-var DIRECTIONS = [{dr:  1, dc:  0},
-                  {dr:  0, dc:  1},
-                  {dr: -1, dc:  0},
-                  {dr:  0, dc: -1}];
-
-// Game class
 class Game {
     turn: string;
     selectedPiece: Piece;
@@ -326,144 +319,6 @@ class Game {
     private removePieces(pieces: Piece[]): void {
         pieces.forEach((piece) => {
             this.removePiece(piece);
-        });
-    }
-}
-
-
-// Board class
-class Board {
-    cells: Cell[][];
-
-    constructor() {
-        this.cells = Board.getCells();
-    }
-    
-    getPieceInCell(row: number, col: number): Piece {
-        return this.cells[row][col].piece;
-    }
-    
-    removePieceFromCell(row: number, col: number): void {
-        this.cells[row][col].piece = null;
-    }
-    
-    static getCells(): Cell[][] {
-        var cells: Cell[][] = [];
-        
-        for (var row = 0; row < ROWS; row++) {
-            cells.push([]);
-            
-            for (var col = 0; col < COLS; col++) {
-                cells[row].push(new Cell(row, col));
-            }
-        }
-        
-        return cells;
-    }
-}
-
-
-// Piece class
-class Piece {
-    domElement: JQuery;
-    col: number;
-    row: number;
-    color: string;
-    id: number;
-
-    constructor(id: number, color: string) {
-        this.id = id;
-        this.color = color;
-        this.row = Piece.getRow(id, color);
-        this.col = Piece.getCol(id);
-        this.domElement = $(".piece#" + color + id);
-        this.initDomElement();
-        Game.getInstance().placePiece(this, this.row, this.col);
-    }
-    
-    initDomElement(): void {
-        // remove changes from previous game
-        this.domElement.off("click");
-        this.domElement.show();
-        
-        this.domElement.click(() => {
-            Game.getInstance().cellClicked(this.row, this.col);
-        });
-        
-        this.moveDomElementWithoutAnimationTo(this.row, this.col);
-    }
-    
-    moveTo(row: number, col: number): void {
-        Game.getInstance().board.removePieceFromCell(this.row, this.col);
-        
-        this.row = row;
-        this.col = col;
-
-        this.moveDomElementTo(this.row, this.col);
-        Game.getInstance().placePiece(this, this.row, this.col);
-    }
-    
-    moveDomElementWithoutAnimationTo(row: number, col: number): void {
-        var cell = Game.getInstance().board.cells[row][col];
-        this.domElement.css(cell.domElement.position());
-    }
-
-    moveDomElementTo(row: number, col: number): void {
-        var cell = Game.getInstance().board.cells[row][col];
-        this.domElement.animate(cell.domElement.position(), 500);
-    }
-    
-    hideDomElement(): void {
-        this.domElement.hide();
-    }
-    
-    fadeDomElement(): void {
-        this.domElement.fadeOut();
-    }
-
-    select(): void {
-        this.domElement.addClass(SELECTED);
-    }
-    
-    unselect(): void {
-        this.domElement.removeClass(SELECTED);
-    }
-
-    static getCol(id: number): number {
-        return id;
-    }
-
-    static getRow(id: number, color: string): number {
-        if (color == WHITE) {
-            return 7;
-        } else {
-            return 0;
-        }
-    }
-}
-
-
-// Cell class
-class Cell {
-    row: number;
-    col: number;
-    piece: Piece;
-    domElement: JQuery;
-    
-    constructor(row: number, col: number) {
-        this.row = row;
-        this.col = col;
-        this.piece = null;
-        this.domElement = $(".cell#r" + row + "c" + col);
-        this.initDomElement();
-    }
-    
-    initDomElement(): void {
-        // remove pre-existing bindings
-        this.domElement.off("click");
-    
-        this.domElement.click(() => {
-            Game.getInstance().cellClicked(this.row, this.col);
         });
     }
 }

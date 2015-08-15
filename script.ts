@@ -1,4 +1,8 @@
+// script.ts by Takumi Fujimoto
+
 /// <reference path="typings/jquery/jquery.d.ts"/>
+/// <reference path="SandwichChessConstants.ts" />
+/// <reference path="Game.ts" />
 
 // globals
 var MENU_PAGE_ID = "menu";
