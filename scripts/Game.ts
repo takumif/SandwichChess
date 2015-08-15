@@ -1,6 +1,6 @@
 // Game.ts by Takumi Fujimoto
 
-/// <reference path="typings/jquery/jquery.d.ts"/>
+/// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="Board.ts" />
 /// <reference path="Cell.ts" />
 /// <reference path="SandwichChessAI.ts" />

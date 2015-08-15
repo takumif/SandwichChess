@@ -63,10 +63,6 @@ class Piece {
         this.domElement.animate(cell.domElement.position(), 500);
     }
     
-    hideDomElement(): void {
-        this.domElement.hide();
-    }
-    
     fadeDomElement(): void {
         this.domElement.fadeOut();
     }
