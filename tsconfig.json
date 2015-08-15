@@ -5,6 +5,6 @@
         "sourceMap": true
     },
     "filesGlob": [
-        "./*.ts"
+        "./scripts/*.ts"
     ]
 }
