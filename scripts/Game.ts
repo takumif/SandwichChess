@@ -11,7 +11,7 @@ class Game {
     selectedPiece: Piece;
     pieces: { [keys: string]: Piece[] };
     board: Board;
-    static instance: Game;
+    private static instance: Game;
 
     static getOppositeColor(color: string): string {
         if (color === WHITE) {
@@ -39,7 +39,7 @@ class Game {
         return Game.instance;
     }
     
-    static withinBounds(row: number, col: number): boolean {
+    static isWithinBounds(row: number, col: number): boolean {
         return (0 <= row && row < ROWS) && (0 <= col && col < COLS);
     }
     
@@ -49,7 +49,7 @@ class Game {
         });
         
         var adjsWithinBounds = allAdjs.filter((coords) => {
-            return Game.withinBounds(coords.row, coords.col);
+            return Game.isWithinBounds(coords.row, coords.col);
         }); 
         
         return adjsWithinBounds;
@@ -74,7 +74,7 @@ class Game {
             var r = row + deltas.dr;
             var c = col + deltas.dc;
         
-            while (Game.withinBounds(r, c)) {
+            while (Game.isWithinBounds(r, c)) {
                 var piece = this.getPieceInCell(r, c);
                 if (piece == null) {
                     break;
